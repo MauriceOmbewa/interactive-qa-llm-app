@@ -1,6 +1,10 @@
 import os
 import httpx
+from dotenv import load_dotenv
 from ..utils.prompt import build_prompt
+
+# Load environment variables from .env file
+load_dotenv()
 
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
 API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
@@ -9,7 +13,7 @@ async def ask_llm(question: str):
     prompt = build_prompt(question)
     
     if LLM_PROVIDER == "gemini":
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
         payload = {
             "contents": [{
                 "parts": [{"text": prompt}]
