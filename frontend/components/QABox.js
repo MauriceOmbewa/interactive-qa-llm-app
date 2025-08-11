@@ -143,6 +143,7 @@ export default function QABox() {
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+        <div className="mx-auto space-y-6" style={{width: '40%'}}>
         {conversations.map((msg, index) => (
           <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-3xl rounded-2xl px-5 py-4 ${
@@ -182,10 +183,12 @@ export default function QABox() {
         )}
         
         <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Input Area */}
       <div className="bg-black border-t border-gray-800 px-6 py-4">
+        <div className="mx-auto" style={{width: '40%'}}>
         {error && (
           <div className="mb-3 p-3 bg-red-900 border border-red-700 rounded-lg text-red-200 text-sm">
             {error}
@@ -225,6 +228,7 @@ export default function QABox() {
           </button>
         </form>
         <p className="text-xs text-gray-500 mt-2 text-center">Press Enter to send, Shift+Enter for new line</p>
+        </div>
       </div>
     </div>
   );
