@@ -9,7 +9,7 @@ async def ask(req: QueryRequest):
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question is empty")
     try:
-        answer, raw = await ask_llm(req.question)
+        answer, raw = await ask_llm(req.question, req.chat_history)
         return QueryResponse(question=req.question, answer=answer, raw=raw)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
