@@ -29,10 +29,19 @@ export default function QABox() {
     setQuestion("");
     
     try {
+      // Build chat history for context
+      const chatHistory = conversations.map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      }));
+      
       const res = await fetch("http://localhost:8000/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: currentQuestion }),
+        body: JSON.stringify({ 
+          question: currentQuestion,
+          chat_history: chatHistory
+        }),
       });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
