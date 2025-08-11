@@ -9,11 +9,11 @@ load_dotenv()
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
 API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
-async def ask_llm(question: str):
+async def ask_llm(question: str, chat_history=None):
     if not API_KEY:
         raise ValueError("API key not found. Please set GEMINI_API_KEY or GOOGLE_API_KEY in your .env file")
     
-    prompt = build_prompt(question)
+    prompt = build_prompt(question, chat_history)
     
     if LLM_PROVIDER == "gemini":
         url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={API_KEY}"
