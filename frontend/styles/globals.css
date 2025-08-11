@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --accent: #d7ec32;
 }
 
 @theme inline {
@@ -12,15 +13,25 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Markdown styling for dark theme */
+.prose-invert h1, .prose-invert h2, .prose-invert h3, .prose-invert h4, .prose-invert h5, .prose-invert h6 {
+  color: #d7ec32;
+}
+
+.prose-invert strong {
+  color: #d7ec32;
+}
+
+.prose-invert ul li::marker {
+  color: #d7ec32;
+}
+
+.prose-invert ol li::marker {
+  color: #d7ec32;
 }

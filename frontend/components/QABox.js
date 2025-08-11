@@ -8,6 +8,7 @@ export default function QABox() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const messagesEndRef = useRef(null);
+  const hasConversations = conversations.length > 0;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -50,44 +51,105 @@ export default function QABox() {
     setError("");
   };
 
+  // Empty state - centered input
+  if (!hasConversations && !loading) {
+    return (
+      <div className="h-screen bg-black flex flex-col">
+        {/* Header */}
+        <div className="bg-black border-b border-gray-800 px-6 py-4">
+          <h1 className="text-xl font-semibold" style={{color: '#d7ec32'}}>AI Assistant</h1>
+        </div>
+
+        {/* Centered Content */}
+        <div className="flex-1 flex items-center justify-center px-6">
+          <div className="w-full max-w-2xl">
+            {/* Welcome Message */}
+            <div className="text-center mb-8">
+              <div className="text-6xl mb-6">🤖</div>
+              <h2 className="text-2xl font-medium mb-3 text-white">Welcome to AI Assistant</h2>
+              <p className="text-gray-400 text-lg">Ask me anything and I'll help you with detailed, structured responses.</p>
+            </div>
+
+            {/* Input Form */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-900 border border-red-700 rounded-lg text-red-200 text-sm">
+                {error}
+              </div>
+            )}
+            <form onSubmit={submitQuestion} className="space-y-4">
+              <div className="relative">
+                <textarea 
+                  value={question} 
+                  onChange={(e)=>setQuestion(e.target.value)}
+                  placeholder="Type your question here..." 
+                  className="w-full p-4 bg-gray-900 border border-gray-700 rounded-xl focus:ring-2 focus:border-transparent resize-none text-white placeholder-gray-400" 
+                  style={{focusRingColor: '#d7ec32'}}
+                  rows={4}
+                  disabled={loading}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      submitQuestion(e);
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex justify-center">
+                <button 
+                  type="submit"
+                  disabled={loading || !question.trim()} 
+                  className="px-8 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    backgroundColor: '#d7ec32',
+                    color: 'black'
+                  }}
+                >
+                  <span>{loading ? "Sending..." : "Send Message"}</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+            <p className="text-center text-xs text-gray-500 mt-3">Press Enter to send, Shift+Enter for new line</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Chat state - messages with bottom input
   return (
-    <div className="flex flex-col h-screen max-w-4xl mx-auto bg-gray-50">
+    <div className="flex flex-col h-screen bg-black">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-gray-800">AI Assistant</h1>
-        {conversations.length > 0 && (
-          <button 
-            onClick={clearChat}
-            className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md text-gray-600 transition-colors"
-          >
-            Clear Chat
-          </button>
-        )}
+      <div className="bg-black border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+        <h1 className="text-xl font-semibold" style={{color: '#d7ec32'}}>AI Assistant</h1>
+        <button 
+          onClick={clearChat}
+          className="px-3 py-1 text-sm bg-gray-800 hover:bg-gray-700 rounded-md text-gray-300 transition-colors"
+        >
+          Clear Chat
+        </button>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-        {conversations.length === 0 && (
-          <div className="text-center text-gray-500 mt-20">
-            <div className="text-4xl mb-4">🤖</div>
-            <h2 className="text-xl font-medium mb-2">Welcome to AI Assistant</h2>
-            <p>Ask me anything and I'll help you with detailed, structured responses.</p>
-          </div>
-        )}
-        
+      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
         {conversations.map((msg, index) => (
           <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-3xl rounded-lg px-4 py-3 ${
+            <div className={`max-w-3xl rounded-2xl px-5 py-4 ${
               msg.type === 'user' 
-                ? 'bg-blue-600 text-white ml-12' 
+                ? 'ml-12' 
                 : msg.type === 'error'
-                ? 'bg-red-100 text-red-800 mr-12 border border-red-200'
-                : 'bg-white text-gray-800 mr-12 shadow-sm border'
-            }`}>
+                ? 'bg-red-900 text-red-200 mr-12 border border-red-700'
+                : 'bg-gray-900 text-white mr-12 border border-gray-700'
+            }`} style={{
+              backgroundColor: msg.type === 'user' ? '#d7ec32' : undefined,
+              color: msg.type === 'user' ? 'black' : undefined
+            }}>
               {msg.type === 'user' ? (
-                <p className="whitespace-pre-wrap">{msg.content}</p>
+                <p className="whitespace-pre-wrap font-medium">{msg.content}</p>
               ) : (
-                <div className="prose prose-sm max-w-none">
+                <div className="prose prose-invert prose-sm max-w-none">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                 </div>
               )}
@@ -97,14 +159,14 @@ export default function QABox() {
         
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-white text-gray-800 mr-12 shadow-sm border rounded-lg px-4 py-3 max-w-3xl">
-              <div className="flex items-center space-x-2">
+            <div className="bg-gray-900 text-white mr-12 border border-gray-700 rounded-2xl px-5 py-4 max-w-3xl">
+              <div className="flex items-center space-x-3">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-2 h-2 rounded-full animate-bounce" style={{backgroundColor: '#d7ec32'}}></div>
+                  <div className="w-2 h-2 rounded-full animate-bounce" style={{backgroundColor: '#d7ec32', animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 rounded-full animate-bounce" style={{backgroundColor: '#d7ec32', animationDelay: '0.2s'}}></div>
                 </div>
-                <span className="text-gray-500 text-sm">AI is thinking...</span>
+                <span className="text-gray-400 text-sm">AI is thinking...</span>
               </div>
             </div>
           </div>
@@ -114,9 +176,9 @@ export default function QABox() {
       </div>
 
       {/* Input Area */}
-      <div className="bg-white border-t px-6 py-4">
+      <div className="bg-black border-t border-gray-800 px-6 py-4">
         {error && (
-          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
+          <div className="mb-3 p-3 bg-red-900 border border-red-700 rounded-lg text-red-200 text-sm">
             {error}
           </div>
         )}
@@ -126,7 +188,8 @@ export default function QABox() {
               value={question} 
               onChange={(e)=>setQuestion(e.target.value)}
               placeholder="Type your question here..." 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" 
+              className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl focus:ring-2 focus:border-transparent resize-none text-white placeholder-gray-400" 
+              style={{focusRingColor: '#d7ec32'}}
               rows={2}
               disabled={loading}
               onKeyDown={(e) => {
@@ -140,7 +203,11 @@ export default function QABox() {
           <button 
             type="submit"
             disabled={loading || !question.trim()} 
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
+            className="px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              backgroundColor: '#d7ec32',
+              color: 'black'
+            }}
           >
             <span>{loading ? "Sending..." : "Send"}</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +215,7 @@ export default function QABox() {
             </svg>
           </button>
         </form>
-        <p className="text-xs text-gray-500 mt-2">Press Enter to send, Shift+Enter for new line</p>
+        <p className="text-xs text-gray-500 mt-2 text-center">Press Enter to send, Shift+Enter for new line</p>
       </div>
     </div>
   );
