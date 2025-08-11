@@ -100,7 +100,7 @@ cp .env.example backend/.env
 # Edit the backend/.env file and replace 'your_api_key_here' with your actual API key
 # The file should look like:
 # LLM_PROVIDER=gemini
-# GEMINI_API_KEY=AIzaSyBC76PJDeo3K1Se4_LyeqVn6AQNllkDxxQ...
+# GEMINI_API_KEY=AIzDxxQ...
 # BACKEND_PORT=8000
 # FRONTEND_ORIGIN=http://localhost:3000
 ```
@@ -150,8 +150,6 @@ npm run dev
 
 - **Frontend Application**: http://localhost:3000
 - **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs (Interactive Swagger UI)
-- **API Health Check**: http://localhost:8000/api/ask (POST endpoint)
 
 ### Quick Scripts
 
@@ -192,7 +190,7 @@ FRONTEND_ORIGIN=http://localhost:3000  # Frontend URL for CORS
 1. **Visit Google AI Studio**: https://aistudio.google.com/
 2. **Sign in** with your Google account
 3. **Create API Key**: Look for "Get API key" button
-4. **Copy the key**: It should start with `AIza` and be about 39 characters long
+4. **Copy the key**: It should start with something like `AIza` and be about 39 characters long
 5. **Paste into .env**: Replace `your_api_key_here` with your actual key
 
 ⚠️ **Security Note**: Never commit your `.env` file to version control. The `.gitignore` file already excludes it.
@@ -365,57 +363,6 @@ curl -X POST http://localhost:8000/api/ask \
 - **Debugging**: Check browser console and terminal logs for errors
 - **API Testing**: Use the Swagger UI at http://localhost:8000/docs
 
-## 🚀 Deployment
-
-### Frontend Deployment (Vercel)
-
-1. **Push to GitHub**:
-   ```bash
-   git add .
-   git commit -m "Ready for deployment"
-   git push origin main
-   ```
-
-2. **Deploy on Vercel**:
-   - Visit [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Set build settings:
-     - Framework: Next.js
-     - Root Directory: `frontend`
-     - Build Command: `npm run build`
-
-3. **Update API URL**: Change the API URL in `frontend/components/QABox.js` from `localhost:8000` to your backend URL
-
-### Backend Deployment (Render/Railway)
-
-1. **Render Deployment**:
-   - Connect your GitHub repository
-   - Set build settings:
-     - Environment: Python
-     - Build Command: `pip install -r requirements.txt`
-     - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-     - Root Directory: `backend`
-
-2. **Environment Variables**:
-   ```
-   LLM_PROVIDER=gemini
-   GEMINI_API_KEY=your_production_api_key
-   FRONTEND_ORIGIN=https://your-frontend-url.vercel.app
-   ```
-
-3. **Railway Deployment**:
-   - Install Railway CLI: `npm install -g @railway/cli`
-   - Login: `railway login`
-   - Deploy: `railway up`
-
-### Production Checklist
-
-- [ ] Update CORS origins for production URLs
-- [ ] Set production environment variables
-- [ ] Test API endpoints with production URLs
-- [ ] Monitor API usage and rate limits
-- [ ] Set up error monitoring (optional)
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -436,7 +383,3 @@ If you encounter any issues:
 2. Review the server logs for error messages
 3. Ensure your API key is valid and has sufficient quota
 4. Open an issue on GitHub with detailed error information
-
----
-
-**Happy coding! 🎉**
