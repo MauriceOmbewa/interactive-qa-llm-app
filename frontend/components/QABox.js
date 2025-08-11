@@ -194,15 +194,15 @@ export default function QABox() {
             {error}
           </div>
         )}
-        <form onSubmit={submitQuestion} className="flex space-x-3">
+        <form onSubmit={submitQuestion} className="flex space-x-2">
           <div className="flex-1">
             <textarea 
               value={question} 
               onChange={(e)=>setQuestion(e.target.value)}
               placeholder="Type your question here..." 
-              className="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl focus:ring-2 focus:border-transparent resize-none text-white placeholder-gray-400" 
+              className="w-full p-2 bg-gray-900 border border-gray-700 rounded-lg focus:ring-2 focus:border-transparent resize-none text-white placeholder-gray-400 text-sm" 
               style={{focusRingColor: '#d7ec32'}}
-              rows={2}
+              rows={1}
               disabled={loading}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -215,16 +215,13 @@ export default function QABox() {
           <button 
             type="submit"
             disabled={loading || !question.trim()} 
-            className="px-6 py-3 rounded-xl font-medium transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               backgroundColor: '#d7ec32',
               color: 'black'
             }}
           >
-            <span>{loading ? "Sending..." : "Send"}</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
+            {loading ? "..." : "Send"}
           </button>
         </form>
         <p className="text-xs text-gray-500 mt-2 text-center">Press Enter to send, Shift+Enter for new line</p>
