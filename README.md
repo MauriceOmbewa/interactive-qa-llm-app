@@ -379,7 +379,6 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 If you encounter any issues:
 
-1. Check the [Common Issues](#common-issues) section
-2. Review the server logs for error messages
-3. Ensure your API key is valid and has sufficient quota
-4. Open an issue on GitHub with detailed error information
+1. Review the server logs for error messages
+2. Ensure your API key is valid and has sufficient quota
+3. Open an issue on GitHub with detailed error information
